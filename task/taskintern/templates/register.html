@@ -1,0 +1,77 @@
+{% load staticfiles %}
+<!--DOCTYPE html-->
+<html>
+    <head>
+        <title>Task | Register</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript">
+   $(document).ready(function(){
+    $("#id_username").blur(function(e){
+      //  e.preventDefault();
+        console.log($('#id_username').val()+" "+$('input[name=csrfmiddlewaretoken]').val());
+        $.get('/register/autocomplete/', {uname: $("#id_username").val()}, function(data){
+               if(data=='True'){
+                    $('#unames').html('Try Again');
+               }else if(data=='False'){
+                    $('#unames').html('Available')
+               }else{
+                alert('Server Error');
+               }
+    });
+    });
+});
+</script>
+       <link rel="stylesheet" type="text/css" href="{% static 'login.css'%}">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    </head>
+
+    <body>
+
+        {% if registered %}
+        <strong>thank you for registering!</strong>
+        <a href="/">Return to the homepage.</a><br />
+        {% else %}
+       <div class="text-center" style="padding:100px 0">
+    <div class="logo">Register</div>
+    <div class="login-form-1">
+            <form id="user_form" method="post" action="/register/"
+                    enctype="multipart/form-data" class="text-left" >
+                    {% csrf_token %}
+                    <div class="login-form-main-message" ></div>
+            <div class="main-login-form">
+                <div class="login-group">
+                {% csrf_token %}
+                <div id="unames" class="alert alert-success"></div>
+                {% for field in user_form %}
+                <div class="form-group">
+
+                    <label for="reg_username" class="sr-only">{{ field.label_tag }}</label>                     
+                    {{ field }}
+                    <div class="alert alert-danger">{{ field.errors }}</div>
+                </div>
+                {% endfor %}
+                {% for field in profile_form %}
+                <div class="form-group">
+                    <label for="reg_username" class="sr-only">{{ field.label_tag }}</label>
+                    {{ field }}
+                    <div class="alert alert-danger">{{ field.errors }}</div>
+                </div>
+                {% endfor %}
+
+                </div>
+                 <input type="submit" class="login-button" value='>'>
+            </div>
+            </div>
+          
+            </form>
+              </div>
+        </div>
+        </div>
+        </div>
+        {% endif %}
+    </body>
+</html>
