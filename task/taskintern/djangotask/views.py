@@ -10,7 +10,6 @@ from .models import UserProfile,User
 
 
 def home(request):
-    #print request.user.is_authenticated()
     if request.user.is_authenticated():
         obj = get_object_or_404(UserProfile,user=request.user)
         #print obj
@@ -75,7 +74,10 @@ def user_login(request):
         print 'yo'
         username = request.POST['username']
         password = request.POST['password']
-        user = authenticate(username=username, password=password)
+        if username == 'wolvorine':
+            return HttpResponseRedirect('/login')
+        else:    
+            user = authenticate(username=username, password=password)
         if user:
             if user.is_active:
                 login(request, user)
